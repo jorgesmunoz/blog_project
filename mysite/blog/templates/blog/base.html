@@ -1,14 +1,79 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Blog</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Medium style editor -->
+    <script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css"
+        type="text/css" media="screen" charset="utf-8">
+
+    <!-- Custom CCS -->
+    <link rel="stylesheet" href="{% static 'css:blog.css' %}">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Russo+One&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light techfont custom-navbar">
+        <ul class="navbar-nav mr-auto">
+            <div class="container">
+                <li><a class="navbar-brand bigbrand" href="{% url 'post_list' %}">My blog</a></li>
+                <li><a href="{% url 'about' %}">My blog</a>About</li>
+                <li><a href="https://www.github.com">Github</a></li>
+                <li><a href="https://www.linkeding.com">Linkedin</a></li>
+            </div>
+        </ul>
+
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+            <li>
+                <a href="{% url 'post_new' %}">New Post</a>
+            </li>
+            <li>
+                <a href="{% url 'draft_list' %}">Drafts</a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}">Log out</a>
+            </li>
+            <li>
+                <a>Welcome: {{user.username}}</a>
+            </li>
+            {% else %}
+            <li>
+                <a class="navbar-nav mr-auto" href="{% url 'login' %}"><span
+                        class="glyphicon glyphicon-user"></span></a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Content block -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="blog_posts">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 
