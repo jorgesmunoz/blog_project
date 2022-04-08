@@ -61,6 +61,15 @@ class DraftListView(LoginRequiredMixin, ListView):
         # https://docs.djangoproject.com/en/4.0/ref/models/querysets/#field-lookups-1
         return Post.objects.filter(published_date__isnull=True).order_by('created_date')
 
+##########################################################################################
+
+
+@login_required
+def post_publish(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.publish()
+    return redirect('post_detail', pk=pk)
+
 
 @login_required
 def add_comment_to_post(request, pk):
@@ -75,4 +84,21 @@ def add_comment_to_post(request, pk):
             return redirect('post_detail', pk=post.pk)
     else:
         form = CommentForm()
-    return render(request, )
+
+    return render(request, 'blog/comment_form.html', {'form': form})
+
+
+@login_required
+def comment_approve(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.approve()
+    return redirect('post_detail', pk=comment.post.pk)
+
+
+@login_required
+def comment_remove(reuest, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post_pk = comment.post.pk
+    # delete comment from the database
+    comment.delete()
+    return redirect('post_detail', pk=post_pk)
